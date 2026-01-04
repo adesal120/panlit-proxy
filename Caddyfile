@@ -7,11 +7,7 @@
     }
 }
 
-:443 {
-    tls {
-        on_demand
-    }
-    
+:{$PORT:8080} {
     reverse_proxy https://panlit.replit.app {
         header_up X-Forwarded-Host {host}
         header_up X-Original-Host {host}
@@ -28,8 +24,4 @@
         output stdout
         format json
     }
-}
-
-:80 {
-    redir https://{host}{uri} permanent
 }
