@@ -1,10 +1,5 @@
 {
     email admin@panlit.com
-    
-    on_demand_tls {
-        interval 2m
-        burst 5
-    }
 }
 
 :{$PORT:8080} {
