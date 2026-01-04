@@ -1,48 +1,35 @@
-# Railway Caddy Proxy for Panlit Custom Domains
-# This proxy accepts any hostname and forwards to Replit
-# Caddy automatically provisions SSL via Let's Encrypt
-
 {
-    # Enable automatic HTTPS for all incoming domains
-    auto_https on
-    
-    # Email for Let's Encrypt certificate notifications
     email admin@panlit.com
     
-    # Enable On-Demand TLS for any domain
     on_demand_tls {
-        # Optional: Add rate limiting or validation endpoint here
-        # For now, accept any domain (merchants must CNAME to this proxy)
+        interval 2m
+        burst 5
     }
 }
 
-# Match any hostname and proxy to Replit
-:443, :80 {
-    # Enable on-demand TLS for automatic certificate provisioning
+:443 {
     tls {
         on_demand
     }
     
-    # Reverse proxy to Replit
     reverse_proxy https://panlit.replit.app {
-        # Preserve the original host header for merchant identification
         header_up X-Forwarded-Host {host}
         header_up X-Original-Host {host}
         header_up X-Forwarded-Proto {scheme}
         header_up X-Real-IP {remote_host}
-        
-        # Set the Host header to Replit's expected hostname
         header_up Host panlit.replit.app
         
-        # Enable WebSocket support
         transport http {
             versions 1.1 2
         }
     }
     
-    # Logging for debugging
     log {
         output stdout
         format json
     }
+}
+
+:80 {
+    redir https://{host}{uri} permanent
 }
