@@ -1,9 +1,5 @@
 {
     email admin@panlit.com
-    
-    on_demand_tls {
-        burst 5
-    }
 }
 
 :8080 {
